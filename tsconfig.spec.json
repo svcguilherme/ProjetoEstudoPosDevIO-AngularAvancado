@@ -3,7 +3,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
     "outDir": "./out-tsc/spec",
+    "rootDir": "./src",
     "types": [
       "vitest/globals"
     ]

@@ -1,0 +1,79 @@
+:host {
+	--cor-principal: #0b5d9a;
+	--cor-principal-escura: #084b7c;
+	--cor-fundo: #f4f7fb;
+	--cor-superficie: #ffffff;
+	--cor-texto: #1f2937;
+	--cor-borda: #d7e0ea;
+	display: block;
+	min-height: 100dvh;
+	background: linear-gradient(160deg, #eaf1f8 0%, #f7fafc 40%, #eef6ff 100%);
+	color: var(--cor-texto);
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.layout {
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+}
+
+.topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1rem 1.5rem;
+	background: var(--cor-superficie);
+	border-bottom: 1px solid var(--cor-borda);
+	box-shadow: 0 6px 18px rgba(10, 40, 70, 0.08);
+}
+
+.topbar h1 {
+	margin: 0;
+	font-size: 1.1rem;
+}
+
+.menu {
+	display: flex;
+	gap: 0.75rem;
+}
+
+.menu a {
+	text-decoration: none;
+	color: var(--cor-principal);
+	padding: 0.45rem 0.8rem;
+	border: 1px solid transparent;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.menu a:hover {
+	border-color: var(--cor-principal);
+	background-color: #e9f4ff;
+}
+
+.menu a.ativo {
+	background-color: var(--cor-principal);
+	color: #ffffff;
+}
+
+.conteudo {
+	flex: 1;
+	max-width: 960px;
+	width: calc(100% - 2rem);
+	margin: 1.5rem auto;
+	padding: 1.25rem;
+	border: 1px solid var(--cor-borda);
+	border-radius: 0.9rem;
+	background: var(--cor-superficie);
+	box-shadow: 0 10px 30px rgba(18, 46, 73, 0.08);
+}
+
+@media (max-width: 640px) {
+	.topbar {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
