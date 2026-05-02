@@ -1,1 +1,116 @@
-<p>home.component works!</p>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">Angular v21</div>
+    <h1 class="hero-title">Bem-vindo ao mundo <span>Angular</span></h1>
+    <p class="hero-subtitle">
+      O framework moderno para construir aplicações web incríveis com performance,
+      escalabilidade e uma experiência de desenvolvimento de alto nível.
+    </p>
+    <div class="hero-actions">
+      <a href="https://angular.dev" target="_blank" class="btn-primary">Documentação oficial</a>
+      <a href="https://github.com/angular/angular" target="_blank" class="btn-outline">Ver no GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- News / Updates Section -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Novidades do Angular</h2>
+    <p class="section-sub">Fique por dentro das últimas atualizações e recursos do ecossistema Angular.</p>
+
+    <div class="cards-grid">
+
+      <article class="card">
+        <div class="card-tag tag-new">Novo</div>
+        <h3 class="card-title">Angular v21 — Signals estáveis</h3>
+        <p class="card-text">
+          Os Signals chegaram como API estável no Angular 17 e evoluíram no v21 com suporte
+          completo a <code>linkedSignal</code>, <code>resource()</code> e integração
+          nativa com RxJS via <code>toSignal</code> / <code>toObservable</code>.
+        </p>
+        <a href="https://angular.dev/guide/signals" target="_blank" class="card-link">Saiba mais →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-tag tag-hot">Hot</div>
+        <h3 class="card-title">Zoneless Change Detection</h3>
+        <p class="card-text">
+          Diga adeus ao Zone.js! O Angular v18+ introduziu o modo <em>zoneless</em>,
+          permitindo detectar mudanças apenas através de Signals, com melhor performance
+          e menor bundle.
+        </p>
+        <a href="https://angular.dev/guide/experimental/zoneless" target="_blank" class="card-link">Saiba mais →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-tag tag-new">Novo</div>
+        <h3 class="card-title">Defer &amp; Lazy Views</h3>
+        <p class="card-text">
+          O bloco <code>&#64;defer</code> carrega componentes de forma preguiçosa
+          com triggers declarativos como <code>on viewport</code>, <code>on hover</code>
+          e <code>on interaction</code>, otimizando o LCP e a performance inicial.
+        </p>
+        <a href="https://angular.dev/guide/defer" target="_blank" class="card-link">Saiba mais →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-tag tag-update">Update</div>
+        <h3 class="card-title">Nova sintaxe de controle de fluxo</h3>
+        <p class="card-text">
+          Substitua <code>*ngIf</code> e <code>*ngFor</code> pela sintaxe nativa
+          <code>&#64;if</code>, <code>&#64;for</code> e <code>&#64;switch</code>, com
+          melhor performance e leitura mais limpa nos templates.
+        </p>
+        <a href="https://angular.dev/guide/templates/control-flow" target="_blank" class="card-link">Saiba mais →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-tag tag-update">Update</div>
+        <h3 class="card-title">Angular SSR &amp; Hydration</h3>
+        <p class="card-text">
+          Renderização no servidor aprimorada com hydration incremental e partial hydration.
+          Melhore o SEO e o tempo de primeira exibição sem sacrificar a interatividade.
+        </p>
+        <a href="https://angular.dev/guide/ssr" target="_blank" class="card-link">Saiba mais →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-tag tag-hot">Hot</div>
+        <h3 class="card-title">Angular Material 3</h3>
+        <p class="card-text">
+          O Angular Material foi reformulado com suporte completo ao Material Design 3,
+          trazendo theming dinâmico via tokens CSS e novos componentes modernos.
+        </p>
+        <a href="https://material.angular.io" target="_blank" class="card-link">Saiba mais →</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Resources Section -->
+<section class="section section-dark">
+  <div class="container">
+    <h2 class="section-title light">Recursos essenciais</h2>
+    <div class="resources-grid">
+      <a href="https://angular.dev" target="_blank" class="resource-item">
+        <span class="resource-icon">&#128216;</span>
+        <span>angular.dev</span>
+      </a>
+      <a href="https://blog.angular.dev" target="_blank" class="resource-item">
+        <span class="resource-icon">&#128240;</span>
+        <span>Blog Angular</span>
+      </a>
+      <a href="https://youtube.com/&#64;Angular" target="_blank" class="resource-item">
+        <span class="resource-icon">&#127909;</span>
+        <span>YouTube Angular</span>
+      </a>
+      <a href="https://discord.com/invite/angular" target="_blank" class="resource-item">
+        <span class="resource-icon">&#128172;</span>
+        <span>Discord</span>
+      </a>
+    </div>
+  </div>
+</section>
