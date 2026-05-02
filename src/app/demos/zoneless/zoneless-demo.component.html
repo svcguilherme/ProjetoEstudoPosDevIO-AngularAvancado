@@ -1,0 +1,195 @@
+<div class="zl-page">
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="zl-hero">
+    <span class="zl-badge">Angular v19+</span>
+    <h1>Zoneless Change Detection</h1>
+    <p>
+      Detecção de mudanças sem Zone.js — o Angular atualiza a view
+      <strong>somente quando um Signal muda</strong>, com precisão cirúrgica.
+    </p>
+  </header>
+
+  <div class="zl-content">
+
+    <!-- ── Conceito: como funciona ────────────────────────────────────────── -->
+    <section class="zl-card concept-card">
+      <h2 class="zl-card-title">⚙️ Como funciona?</h2>
+      <div class="concept-grid">
+        <div class="concept-col classic">
+          <h3>🔴 Modo Clássico (Zone.js)</h3>
+          <ol>
+            <li>Zone.js <strong>patcha</strong> APIs globais: <code>setTimeout</code>, <code>Promise</code>, <code>fetch</code>…</li>
+            <li>Toda operação assíncrona aciona change detection em <strong>toda a árvore</strong> de componentes.</li>
+            <li>Angular verifica cada binding — mesmo os que não mudaram.</li>
+            <li>✅ Fácil de usar, <br>❌ pode ser ineficiente em apps grandes.</li>
+          </ol>
+        </div>
+        <div class="concept-col zoneless">
+          <h3>🟢 Modo Zoneless (Signals)</h3>
+          <ol>
+            <li>Sem Zone.js — nenhuma API global é patcheada.</li>
+            <li>O Angular rastreia quais <strong>Signals</strong> são lidos por cada trecho do template.</li>
+            <li>Quando um signal muda, <strong>apenas os nós que o leram</strong> são re-renderizados.</li>
+            <li>✅ Performance máxima, <br>✅ previsibilidade total.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Demo: signal() + computed() ───────────────────────────────────── -->
+    <section class="zl-card">
+      <h2 class="zl-card-title">🧪 Demo: <code>signal()</code> + <code>computed()</code></h2>
+
+      <div class="demo-counter">
+        <div class="counter-display">
+          <span class="counter-label">Contador (signal)</span>
+          <span class="counter-value">{{ contador() }}</span>
+        </div>
+        <div class="counter-actions">
+          <button class="btn-dec" (click)="decrementar()">−</button>
+          <button class="btn-inc" (click)="incrementar()">+</button>
+          <button class="btn-rst" (click)="resetar()">Reset</button>
+          <button class="btn-auto" [class.active]="autoAtivo" (click)="toggleAuto()">
+            {{ autoAtivo ? '⏹ Parar auto' : '▶ Auto +1/s' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- computed() valores derivados -->
+      <div class="computed-grid">
+        <div class="computed-item">
+          <span class="computed-label">dobro()</span>
+          <span class="computed-val">{{ dobro() }}</span>
+        </div>
+        <div class="computed-item">
+          <span class="computed-label">parOuImpar()</span>
+          <span class="computed-val">{{ parOuImpar() }}</span>
+        </div>
+        <div class="computed-item">
+          <span class="computed-label">contadorSemSignal</span>
+          <span class="computed-val sem-signal">{{ contadorSemSignal }}</span>
+          <span class="computed-hint">❌ não atualiza em zoneless</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Demo: nome com two-way via signal ──────────────────────────────── -->
+    <section class="zl-card">
+      <h2 class="zl-card-title">✍️ Demo: <code>signal()</code> com input</h2>
+      <div class="input-demo">
+        <label for="nomeInput">Seu nome:</label>
+        <input
+          id="nomeInput"
+          type="text"
+          [value]="nome()"
+          (input)="nome.set($any($event.target).value)"
+          placeholder="Digite seu nome…"
+        />
+      </div>
+      <div class="mensagem-box">
+        <p>{{ mensagem() }}</p>
+      </div>
+      <p class="code-hint">
+        O template lê <code>nome()</code> e <code>contador()</code> — Angular sabe exatamente
+        quais signals este parágrafo depende e só o atualiza quando eles mudam.
+      </p>
+    </section>
+
+    <!-- ── Demo: effect() ─────────────────────────────────────────────────── -->
+    <section class="zl-card">
+      <h2 class="zl-card-title">📡 Demo: <code>effect()</code></h2>
+      <p class="zl-desc">
+        Um <code>effect()</code> é um side-effect que <strong>re-executa automaticamente</strong>
+        sempre que algum signal lido dentro dele muda. Ideal para logging, sincronização
+        com storage, chamadas externas, etc.
+      </p>
+      <div class="log-box">
+        <div class="log-header">Console de efeitos</div>
+        @for (entry of logEntries; track entry) {
+          <div class="log-entry">{{ entry }}</div>
+        } @empty {
+          <div class="log-empty">Clique em + ou inicie o auto para ver os efeitos…</div>
+        }
+      </div>
+    </section>
+
+    <!-- ── Como habilitar zoneless ────────────────────────────────────────── -->
+    <section class="zl-card setup-card">
+      <h2 class="zl-card-title">🚀 Como habilitar Zoneless no seu projeto</h2>
+
+      <div class="step">
+        <span class="step-num">1</span>
+        <div>
+          <strong>app.config.ts</strong> — adicione <code>provideZonelessChangeDetection()</code>:
+          <pre><code>import &#123; provideZonelessChangeDetection &#125; from '&#64;angular/core';
+
+export const appConfig: ApplicationConfig = &#123;
+  providers: [
+    provideZonelessChangeDetection(), // ← aqui
+    provideRouter(routes),
+  ]
+&#125;;</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">2</span>
+        <div>
+          <strong>angular.json</strong> — remova o polyfill do zone.js (opcional,
+          mas recomendado para reduzir bundle):
+          <pre><code>"polyfills": []  // remova "zone.js"</code></pre>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">3</span>
+        <div>
+          <strong>Substitua estado mutable por Signals</strong> em seus componentes.
+          Observables continuam funcionando via <code>async pipe</code> (que chama
+          <code>markForCheck()</code> internamente).
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Cheat sheet ────────────────────────────────────────────────────── -->
+    <section class="zl-card">
+      <h2 class="zl-card-title">📋 Cheat Sheet — Signals API</h2>
+      <div class="cheat-grid">
+        <div class="cheat-item">
+          <code>signal(valor)</code>
+          <span>Cria um signal com valor inicial</span>
+        </div>
+        <div class="cheat-item">
+          <code>signal.set(x)</code>
+          <span>Substitui o valor</span>
+        </div>
+        <div class="cheat-item">
+          <code>signal.update(fn)</code>
+          <span>Atualiza com base no valor atual</span>
+        </div>
+        <div class="cheat-item">
+          <code>computed(() => ...)</code>
+          <span>Valor derivado, memoizado</span>
+        </div>
+        <div class="cheat-item">
+          <code>effect(() => ...)</code>
+          <span>Side-effect reativo</span>
+        </div>
+        <div class="cheat-item">
+          <code>toSignal(obs$)</code>
+          <span>Converte Observable → Signal</span>
+        </div>
+        <div class="cheat-item">
+          <code>toObservable(sig)</code>
+          <span>Converte Signal → Observable</span>
+        </div>
+        <div class="cheat-item">
+          <code>linkedSignal()</code>
+          <span>Signal com fonte dinâmica (v19+)</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
