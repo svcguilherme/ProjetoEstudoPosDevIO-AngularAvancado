@@ -1,0 +1,29 @@
+services:
+
+  # ── Angular SSR ─────────────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "4200:4000"          # acesse em http://localhost:4200
+    environment:
+      PORT: "4000"
+      NODE_ENV: production
+    restart: unless-stopped
+
+  # ── Backend API ──────────────────────────────────────────────────────────────
+  # Descomente e ajuste se quiser subir a API junto com o Angular.
+  #
+  # api:
+  #   image: node:20-alpine
+  #   working_dir: /api
+  #   volumes:
+  #     - ../seu-projeto-api:/api   # aponte para o repositório da API
+  #   command: node server.js
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     PORT: "3000"
+  #     NODE_ENV: development

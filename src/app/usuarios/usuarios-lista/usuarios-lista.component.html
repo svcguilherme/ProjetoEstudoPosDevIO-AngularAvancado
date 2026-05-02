@@ -1,0 +1,75 @@
+<section class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h4 mb-0">Usuários</h1>
+    @if (isAdmin()) {
+      <a routerLink="/cadastro-usuario" class="btn btn-primary btn-sm">+ Novo Usuário</a>
+    }
+  </div>
+
+  @if (carregando()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+    </div>
+  }
+
+  @if (erro()) {
+    <div class="alert alert-danger d-flex align-items-center gap-2">
+      <span>{{ erro() }}</span>
+      <button type="button" class="btn btn-sm btn-outline-danger ms-auto" (click)="carregar()">
+        Tentar novamente
+      </button>
+    </div>
+  }
+
+  @if (!carregando() && !erro()) {
+    @if (usuarios().length === 0) {
+      <p class="text-muted text-center py-4">Nenhum usuário cadastrado.</p>
+    } @else {
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>CPF</th>
+              <th>Nascimento</th>
+              <th class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (usuario of usuarios(); track usuario.id) {
+              <tr>
+                <td class="text-muted small">{{ usuario.id }}</td>
+                <td>{{ usuario.nome }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.cpf ?? '—' }}</td>
+                <td>{{ usuario.dataNascimento ?? '—' }}</td>
+                <td class="text-end">
+                  @if (isAdmin()) {
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-secondary me-1"
+                      (click)="editar(usuario.id)"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="deletar(usuario.id, usuario.nome)"
+                    >
+                      Excluir
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

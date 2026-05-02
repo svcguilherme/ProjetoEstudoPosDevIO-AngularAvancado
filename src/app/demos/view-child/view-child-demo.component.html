@@ -1,0 +1,110 @@
+<div class="demo-page">
+  <header class="demo-hero purple">
+    <a routerLink="/demos" class="back-link">← Demos</a>
+    <h1>🔍 ViewChild & ViewChildren</h1>
+    <p>Acesse elementos do DOM e componentes filhos diretamente no TypeScript.</p>
+  </header>
+
+  <div class="demo-content">
+
+    <!-- ── 1. @ViewChild com referência de template ───────────────────────── -->
+    <section class="demo-card">
+      <h2>1. @ViewChild com <code>#templateRef</code> (ElementRef)</h2>
+      <p class="desc">
+        Use <code>#nomeRef</code> no template para criar uma referência local.
+        No TypeScript, <code>@ViewChild('nomeRef')</code> captura o <code>ElementRef</code> correspondente.
+        Útil para interagir com o DOM diretamente (foco, leitura de valor, animações).
+      </p>
+
+      <div class="code-block">
+        <pre>// Template:  &lt;input #inputRef /&gt;
+
+// TypeScript:
+@ViewChild('inputRef') inputEl!: ElementRef&lt;HTMLInputElement&gt;;
+
+ngAfterViewInit() &#123;
+  // Só disponível APÓS ngAfterViewInit!
+  this.inputEl.nativeElement.focus();
+&#125;</pre>
+      </div>
+
+      <div class="demo-row">
+        <input #inputRef placeholder="Digite algo…" class="demo-input">
+        <button class="btn-demo" (click)="focarInput()">Focar input</button>
+        <button class="btn-demo ghost" (click)="lerInput()">Ler valor</button>
+      </div>
+
+      @if (!viewInitializado()) {
+        <div class="aviso">⚠️ ViewChild só fica disponível após <code>ngAfterViewInit()</code></div>
+      }
+    </section>
+
+    <!-- ── 2. @ViewChild com tipo do componente ───────────────────────────── -->
+    <section class="demo-card">
+      <h2>2. @ViewChild com tipo do componente filho</h2>
+      <p class="desc">
+        Passe o <strong>tipo da classe</strong> do componente filho para capturá-lo.
+        Isso dá acesso a todos os métodos e sinais públicos do filho — o pai pode
+        orquestrar o filho sem usar <code>@Output()</code>.
+      </p>
+
+      <div class="code-block">
+        <pre>@ViewChild(PainelFilhoComponent)
+painelFilho!: PainelFilhoComponent;
+
+// Chama método público do filho:
+this.painelFilho.destacar();</pre>
+      </div>
+
+      <app-painel-filho></app-painel-filho>
+
+      <div class="btn-row" style="margin-top: 12px">
+        <button class="btn-demo" (click)="chamarMetodoFilho()">Chamar painelFilho.destacar()</button>
+        <button class="btn-demo ghost" (click)="lerEstadoFilho()">Ler painelFilho.mensagem()</button>
+      </div>
+    </section>
+
+    <!-- ── 3. @ViewChildren ───────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>3. @ViewChildren — lista de componentes</h2>
+      <p class="desc">
+        <code>@ViewChildren(Tipo)</code> captura <strong>todos</strong> os componentes
+        desse tipo no template como um <code>QueryList&lt;T&gt;</code>.
+        O <code>QueryList</code> emite <code>changes</code> quando itens são
+        adicionados ou removidos dinamicamente.
+      </p>
+
+      <div class="code-block">
+        <pre>@ViewChildren(PainelFilhoComponent)
+todosPaineis!: QueryList&lt;PainelFilhoComponent&gt;;
+
+chamarTodos() &#123;
+  this.todosPaineis.forEach(p =&gt; p.destacar());
+&#125;</pre>
+      </div>
+
+      <div class="paineis-lista">
+        @for (n of itensPaineis; track n) {
+          <app-painel-filho></app-painel-filho>
+        }
+      </div>
+
+      <div class="btn-row" style="margin-top: 12px">
+        <button class="btn-demo" (click)="chamarTodos()">Destacar todos os paineis</button>
+      </div>
+    </section>
+
+    <!-- ── Log ───────────────────────────────────────────────────────────────  -->
+    <section class="demo-card">
+      <h2>📋 Log de eventos</h2>
+      <div class="log-box">
+        @for (e of logEntries(); track e) {
+          <div class="log-entry">{{ e }}</div>
+        } @empty {
+          <div class="log-empty">Clique nos botões acima para ver os eventos aqui.</div>
+        }
+      </div>
+    </section>
+
+  </div>
+</div>

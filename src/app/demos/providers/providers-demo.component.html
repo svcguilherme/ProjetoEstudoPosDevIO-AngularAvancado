@@ -1,0 +1,141 @@
+<div class="demo-page">
+  <header class="demo-hero orange">
+    <a routerLink="/demos" class="back-link">← Demos</a>
+    <h1>⚙️ Providers — Injeção de Dependência</h1>
+    <p>useValue, useClass, useFactory e useExisting com exemplos práticos.</p>
+  </header>
+
+  <div class="demo-content">
+
+    <!-- ── Conceito ──────────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>Como o Angular resolve dependências</h2>
+      <p class="desc">
+        O <strong>Injetor</strong> do Angular mantém um registro de providers.
+        Quando um componente pede <code>inject(MeuServico)</code>, o injetor
+        procura o provider mais próximo (componente → módulo → root).
+        As 4 estratégias abaixo controlam <em>o que</em> é entregue.
+      </p>
+    </section>
+
+    <!-- ── 1. useValue ────────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>1. <code>useValue</code> — valor constante</h2>
+      <p class="desc">
+        Injeta um <strong>valor estático</strong> diretamente, sem instanciar uma classe.
+        Use para configurações, constantes e mocks de testes.
+      </p>
+      <div class="code-block">
+        <pre>export const APP_CONFIG = new InjectionToken&lt;AppConfig&gt;('app.config');
+
+providers: [
+  &#123; provide: APP_CONFIG, useValue: &#123; tema: 'dark', versao: '21.0.0' &#125; &#125;
+]
+
+// No componente:
+readonly config = inject(APP_CONFIG);</pre>
+      </div>
+      <div class="result-box">
+        <strong>Valor injetado:</strong>
+        <ul>
+          <li>tema: <code>{{ config.tema }}</code></li>
+          <li>versão: <code>{{ config.versao }}</code></li>
+          <li>maxItens: <code>{{ config.maxItens }}</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── 2. useClass ────────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>2. <code>useClass</code> — substituir implementação</h2>
+      <p class="desc">
+        O componente pede <code>Logger</code> (abstrato), o injetor entrega
+        <code>DevLogger</code>. Em produção, basta trocar por <code>ProdLogger</code>
+        <strong>em um só lugar</strong> — o código que usa Logger não muda.
+      </p>
+      <div class="code-block">
+        <pre>abstract class Logger &#123; abstract log(msg: string): void; &#125;
+class DevLogger  extends Logger &#123; log(msg) &#123; console.log('[DEV]', msg); &#125; &#125;
+class ProdLogger extends Logger &#123; log(msg) &#123; /* → Sentry */ &#125; &#125;
+
+providers: [
+  &#123; provide: Logger, useClass: DevLogger &#125;  // ← troca por ProdLogger em prod
+]</pre>
+      </div>
+      <button class="btn-demo" (click)="usarLogger()">Chamar logger.log()</button>
+      @for (m of logMessages; track m) {
+        <div class="log-line">{{ m }}</div>
+      }
+    </section>
+
+    <!-- ── 3. useFactory ──────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>3. <code>useFactory</code> — lógica na criação</h2>
+      <p class="desc">
+        Uma <strong>função</strong> é chamada pelo injetor para produzir o valor.
+        Útil quando o valor depende de lógica, outras injeções, ou estado da aplicação.
+        O array <code>deps</code> injeta dependências para a factory.
+      </p>
+      <div class="code-block">
+        <pre>providers: [
+  &#123;
+    provide: DATA_FORMATADA,
+    useFactory: () =&gt; new Date().toLocaleDateString('pt-BR', &#123;
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    &#125;),
+    // deps: [OutraDepend&#234;ncia]  ← injeta no argumento da factory
+  &#125;
+]</pre>
+      </div>
+      <div class="result-box">
+        <strong>Data formatada pela factory:</strong> {{ data }}
+      </div>
+    </section>
+
+    <!-- ── 4. useExisting ─────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>4. <code>useExisting</code> — alias / redirecionamento</h2>
+      <p class="desc">
+        Cria um <strong>alias</strong> para um provider existente.
+        Diferente de <code>useClass</code>, não cria uma nova instância —
+        ambos os tokens apontam para o <strong>mesmo objeto</strong>.
+        Útil para manter retrocompatibilidade ao renomear serviços.
+      </p>
+      <div class="code-block">
+        <pre>// Serviço novo e serviço antigo (legacy)
+&#64;Injectable() class NovoLogger &#123; ... &#125;
+&#64;Injectable() class AntigoLogger &#123; ... &#125;
+
+providers: [
+  NovoLogger,
+  // AntigoLogger agora &eacute; a mesma inst&#226;ncia de NovoLogger
+  &#123; provide: AntigoLogger, useExisting: NovoLogger &#125;
+]
+
+// Quem injeta AntigoLogger recebe NovoLogger — mesma instância!
+readonly novo   = inject(NovoLogger);
+readonly antigo = inject(AntigoLogger);
+// novo === antigo → true</pre>
+      </div>
+      <div class="aviso-info">
+        💡 Use <code>useExisting</code> quando múltiplas partes do app injetam tokens diferentes
+        mas precisam da <strong>mesma instância</strong> (estado compartilhado garantido).
+      </div>
+    </section>
+
+    <!-- ── Resumo ─────────────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>📋 Resumo Comparativo</h2>
+      <table class="comp-table">
+        <thead><tr><th>Estratégia</th><th>Quando usar</th><th>Cria instância?</th></tr></thead>
+        <tbody>
+          <tr><td><code>useValue</code></td>    <td>Constantes, configuração, mocks</td>         <td>Não</td></tr>
+          <tr><td><code>useClass</code></td>    <td>Trocar implementação por ambiente/contexto</td><td>Sim (nova)</td></tr>
+          <tr><td><code>useFactory</code></td>  <td>Valor com lógica de criação ou deps</td>     <td>Sim (via fn)</td></tr>
+          <tr><td><code>useExisting</code></td> <td>Alias para provider existente</td>           <td>Não (reutiliza)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+</div>

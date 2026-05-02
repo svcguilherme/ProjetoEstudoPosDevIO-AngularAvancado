@@ -1,0 +1,31 @@
+/* Reuse shared demo styles via :host — vars only */
+.demo-page { background: #f8fafc; min-height: 100vh; font-family: system-ui, sans-serif; }
+
+.demo-hero { color: #fff; padding: 40px 32px 36px; }
+.demo-hero.green { background: linear-gradient(135deg, #14532d, #16a34a); }
+.back-link { color: rgba(255,255,255,.8); text-decoration: none; font-size: .875rem; font-weight: 600; display: inline-block; margin-bottom: 16px; }
+.back-link:hover { color: #fff; }
+.demo-hero h1 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin: 0 0 8px; }
+.demo-hero p  { color: rgba(255,255,255,.8); margin: 0; }
+
+.demo-content { max-width: 860px; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 24px; }
+.demo-card { background: #fff; border-radius: 12px; padding: 28px; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+.demo-card h2 { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0 0 8px; }
+.demo-card h2 code { color: #16a34a; background: #dcfce7; padding: 1px 6px; border-radius: 4px; }
+.desc { color: #475569; font-size: .9rem; line-height: 1.7; margin: 0 0 16px; }
+.desc code { background: #f1f5f9; color: #6366f1; padding: 1px 5px; border-radius: 4px; }
+
+.code-block { background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 16px; overflow-x: auto; }
+.code-block pre { color: #e2e8f0; font-size: .8rem; margin: 0; white-space: pre-wrap; font-family: 'Fira Code', monospace; }
+
+.pipe-table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.pipe-table th { background: #f8fafc; color: #64748b; font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; padding: 8px 12px; text-align: left; border-bottom: 2px solid #e2e8f0; }
+.pipe-table td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; color: #374151; vertical-align: middle; }
+.pipe-table code { background: #f1f5f9; color: #6366f1; padding: 1px 5px; border-radius: 4px; font-size: .8em; }
+
+.status-demo { display: flex; flex-direction: column; gap: 10px; }
+.status-item { display: flex; align-items: center; gap: 12px; }
+.status-input { background: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: .85rem; }
+
+.aviso-info { background: #dbeafe; border-left: 3px solid #2563eb; padding: 12px 16px; border-radius: 6px; font-size: .875rem; color: #1e3a5f; }
+.aviso-info code { background: rgba(0,0,0,.07); padding: 1px 5px; border-radius: 4px; }

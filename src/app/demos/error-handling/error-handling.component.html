@@ -1,0 +1,140 @@
+<div class="demo-page">
+  <header class="demo-hero red">
+    <a routerLink="/demos" class="back-link">← Demos</a>
+    <h1>🛡️ Tratamento de Erros</h1>
+    <p>Erros síncronos, HTTP e o padrão loading/error/empty/data.</p>
+  </header>
+
+  <div class="demo-content">
+
+    <!-- ── 1. Erros síncronos ─────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>1. Erros síncronos (try/catch)</h2>
+      <p class="desc">
+        Use <code>try/catch</code> nos componentes para erros que você espera e sabe tratar.
+        Erros não capturados sobem para o <strong>GlobalErrorHandler</strong>.
+      </p>
+
+      <div class="code-block">
+        <pre>// Registrar em app.config.ts:
+&#123; provide: ErrorHandler, useClass: GlobalErrorHandler &#125;
+
+// A classe:
+export class GlobalErrorHandler implements ErrorHandler &#123;
+  handleError(error: unknown) &#123;
+    console.error('[Global]', error);
+    // monitoringService.log(error); ← Sentry, Datadog...
+  &#125;
+&#125;</pre>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-demo" (click)="lancarErroCapturado()">Erro capturado (try/catch)</button>
+        <button class="btn-demo danger" (click)="lancarErroNaoCapturado()">Erro NÃO capturado (GlobalErrorHandler)</button>
+        @if (erroSincrono()) {
+          <button class="btn-demo ghost" (click)="limparErroSincrono()">Limpar</button>
+        }
+      </div>
+
+      @if (erroSincrono()) {
+        <div class="alert-erro">⚠️ {{ erroSincrono() }}</div>
+      }
+    </section>
+
+    <!-- ── 2. Erros HTTP ──────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>2. Erros HTTP via Interceptor</h2>
+      <p class="desc">
+        O <strong>ErrorInterceptor</strong> (<code>withInterceptors([errorInterceptor])</code>)
+        captura todos os erros HTTP em um único lugar, traduz os códigos de status para
+        mensagens amigáveis e relança como <code>ApiError</code>.
+      </p>
+
+      <div class="code-block">
+        <pre>// shared/interceptors/error.interceptor.ts
+export const errorInterceptor: HttpInterceptorFn = (req, next) =&gt;
+  next(req).pipe(
+    catchError((error: HttpErrorResponse) =&gt; &#123;
+      const apiError = &#123; status: error.status, mensagem: traduzirErro(error) &#125;;
+      return throwError(() =&gt; apiError);
+    &#125;)
+  );</pre>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-demo" (click)="simularHttp('sucesso')">✅ Sucesso</button>
+        <button class="btn-demo warning" (click)="simularHttp('404')">🔍 404</button>
+        <button class="btn-demo danger" (click)="simularHttp('401')">🔐 401</button>
+        <button class="btn-demo danger" (click)="simularHttp('sem-conexao')">📵 Sem conexão</button>
+      </div>
+
+      @if (carregandoHttp()) {
+        <div class="estado loading">⏳ Carregando…</div>
+      }
+      @if (erroHttp()) {
+        <div class="estado erro">{{ erroHttp() }}</div>
+      }
+      @if (dadosHttp()) {
+        <div class="estado sucesso">
+          <strong>✅ Dados recebidos:</strong>
+          <pre>{{ dadosHttp()  }}</pre>
+        </div>
+      }
+    </section>
+
+    <!-- ── 3. Padrão Loading / Error / Empty / Data ───────────────────────── -->
+    <section class="demo-card">
+      <h2>3. Padrão: Loading → Error | Empty | Data</h2>
+      <p class="desc">
+        Todo componente que busca dados deve ter <strong>4 estados</strong> bem definidos:
+        <em>idle</em>, <em>loading</em>, <em>error</em>, <em>empty</em> e <em>data</em>.
+        Isso evita telas em branco e melhora muito a UX.
+      </p>
+
+      <div class="code-block">
+        <pre>// No componente:
+estado = signal&lt;'idle' | 'loading' | 'error' | 'empty' | 'data'&gt;('idle');
+
+// No template:
+
+&#125;</pre>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-demo" (click)="simularCarregamento('sucesso')">✅ Carregar com sucesso</button>
+        <button class="btn-demo danger" (click)="simularCarregamento('erro')">❌ Simular erro</button>
+        <button class="btn-demo warning" (click)="simularCarregamento('vazio')">📭 Lista vazia</button>
+      </div>
+
+      <div class="estado-container">
+        @switch (estadoLista()) {
+          @case ('idle') {
+            <div class="estado idle">👆 Clique em um botão para ver os estados.</div>
+          }
+          @case ('loading') {
+            <div class="estado loading">
+              <span class="spinner"></span> Carregando dados…
+            </div>
+          }
+          @case ('error') {
+            <div class="estado erro">❌ {{ erroLista() }}</div>
+          }
+          @case ('empty') {
+            <div class="estado vazio">📭 Nenhum item encontrado. Tente ajustar os filtros.</div>
+          }
+          @case ('data') {
+            <div class="estado sucesso">
+              <strong>✅ {{ listaItens().length }} itens carregados:</strong>
+              <ul>
+                @for (item of listaItens(); track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          }
+        }
+      </div>
+    </section>
+
+  </div>
+</div>

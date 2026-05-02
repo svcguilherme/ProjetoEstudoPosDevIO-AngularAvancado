@@ -1,0 +1,19 @@
+<div class="hub-page">
+  <header class="hub-hero">
+    <span class="hub-badge">Angular v21</span>
+    <h1>Central de Demos</h1>
+    <p>Exemplos interativos dos principais conceitos do Angular</p>
+  </header>
+
+  <div class="hub-grid">
+    @for (demo of demos; track demo.rota) {
+      <a class="demo-card" [routerLink]="demo.rota">
+        <span class="demo-icon">{{ demo.icon }}</span>
+        <span class="demo-tag {{ demo.tagClass }}">{{ demo.tag }}</span>
+        <h3>{{ demo.titulo }}</h3>
+        <p>{{ demo.descricao }}</p>
+        <span class="demo-link">Ver demo →</span>
+      </a>
+    }
+  </div>
+</div>

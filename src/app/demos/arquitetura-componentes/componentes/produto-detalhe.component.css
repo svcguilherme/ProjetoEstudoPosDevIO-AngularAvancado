@@ -1,0 +1,50 @@
+.det-page { max-width: 900px; margin: 0 auto; padding: 32px 24px 64px; font-family: system-ui, sans-serif; }
+
+.det-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.back-btn { color: #6366f1; text-decoration: none; font-weight: 600; font-size: .875rem; border: 1px solid #6366f1; padding: 6px 14px; border-radius: 6px; transition: background .2s; }
+.back-btn:hover { background: #6366f1; color: #fff; }
+.id-badge { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 5px 12px; border-radius: 6px; font-size: .875rem; color: #475569; }
+.id-badge code { color: #6366f1; }
+
+.conceito-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+.conceito-box h3 { font-size: 1rem; font-weight: 700; margin: 0 0 8px; color: #1e293b; }
+.conceito-box p  { color: #475569; font-size: .875rem; margin: 0 0 12px; }
+.conceito-box code { background: #f1f5f9; color: #6366f1; padding: 1px 5px; border-radius: 4px; }
+
+.code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .code-compare { grid-template-columns: 1fr; } }
+.code-col { background: #1e293b; border-radius: 8px; padding: 12px 16px; }
+.col-label { font-size: .75rem; font-weight: 700; display: block; margin-bottom: 8px; }
+.col-label.good { color: #4ade80; }
+.col-label.ok   { color: #fbbf24; }
+.code-col pre { color: #e2e8f0; font-size: .78rem; margin: 0; white-space: pre-wrap; font-family: 'Fira Code', monospace; }
+
+.produto-detalhe { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 28px; display: grid; grid-template-columns: 240px 1fr; gap: 28px; }
+@media (max-width: 640px) { .produto-detalhe { grid-template-columns: 1fr; } }
+
+.prod-image-wrap { display: flex; align-items: flex-start; justify-content: center; }
+.prod-img { width: 200px; height: 200px; object-fit: cover; border-radius: 12px; border: 1px solid #e2e8f0; }
+
+.prod-info { display: flex; flex-direction: column; gap: 10px; }
+.prod-cat { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #6366f1; }
+.prod-info h1 { font-size: 1.6rem; font-weight: 800; color: #1e293b; margin: 0; }
+.prod-desc { color: #475569; font-size: .9rem; line-height: 1.7; margin: 0; }
+.prod-preco { font-size: 2rem; font-weight: 800; color: #16a34a; }
+
+.nav-produtos { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.nav-label { font-size: .8rem; color: #64748b; font-weight: 600; }
+.nav-id { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; border-radius: 6px; text-decoration: none; color: #475569; font-weight: 700; font-size: .85rem; transition: all .2s; }
+.nav-id:hover, .nav-id.active { border-color: #6366f1; background: #6366f1; color: #fff; }
+.nav-hint { font-size: .75rem; color: #94a3b8; }
+
+.nao-encontrado { text-align: center; padding: 64px 24px; color: #64748b; }
+.nao-encontrado span { font-size: 3rem; display: block; margin-bottom: 16px; }
+.nao-encontrado h2 { margin: 0 0 20px; }
+
+.estado-loading { text-align: center; padding: 64px 24px; color: #64748b; }
+.spinner { width: 36px; height: 36px; border: 4px solid #e2e8f0; border-top-color: #6366f1; border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.estado-erro { text-align: center; padding: 48px 24px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; margin: 16px; color: #991b1b; }
+.estado-erro span { font-size: 2rem; display: block; margin-bottom: 10px; }
+.estado-erro p { margin: 0 0 16px; font-weight: 500; }

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Produto } from '../../../../model/Produto';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProdutoCardDetalheComponent } from "../componentes/produto-card-detalhe.component";
 import { ProdutoCountComponent } from "../componentes/produto-count.component";
+import { ProdutoApiService } from '../../../services/produto-api.service';
+import { Produto } from '../../../../model/Produto';
+import { fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-produtos-dashboard',
@@ -12,65 +14,30 @@ import { ProdutoCountComponent } from "../componentes/produto-count.component";
 })
 export class ProdutosDashboardComponent implements OnInit {
 
-  produtos! : Produto[];
+  private readonly produtoService = inject(ProdutoApiService);
 
-  ngOnInit(): void {
-    
-    this.produtos = [
-      {
-      id: 1,
-      nome: 'Smartphone XYZ',
-      preco: 1999.99,
-      image: 'smartphone.jpg',
-      descricao: 'Um smartphone moderno com recursos avançados.',
-      categoria: 'Eletrônicos',
-      status: 'ativo'
-    },
-    {
-      id: 2,
-      nome: 'SmartWatch XYZ',
-      preco: 999.99,
-      image: 'smartwatch.jpg',
-      descricao: 'Um smartwatch moderno com recursos avançados.',
-      categoria: 'Eletrônicos',
-      status: 'ativo'
-    },
-    {
-      id: 3,
-      nome: 'Carregador XYZ',
-      preco: 99.99,
-      image: 'carregador.jpg',
-      descricao: 'Um carregador moderno com recursos avançados.',
-      categoria: 'Eletrônicos',
-      status: 'inativo'
-    },    
-    {
-      id: 4,
-      nome: 'PowerBank XYZ',
-      preco: 199.99,
-      image: 'powerbank.jpg',
-      descricao: 'Um smartphone moderno com recursos avançados.',
-      categoria: 'Eletrônicos',
-      status: 'ativo'
-    },
-    {
-      id: 5,
-      nome: 'Keyboard XYZ',
-      preco: 49.99,
-      image: 'keyboard.jpg',
-      descricao: 'Um teclado moderno com recursos avançados.',
-      categoria: 'Eletrônicos',
-      status: 'ativo'
-    },
-    {
-      id: 6,
-      nome: 'Mouse XYZ',
-      preco: 39.99,
-      image: 'mouse.jpg',
-      descricao: 'Um mouse moderno com recursos avançados.',
-      categoria: 'Eletrônicos',
-      status: 'ativo'
-    },        
-  ];
+  readonly produtos = signal<Produto[]>([]);
+
+  @ViewChild('teste') set content(elemento: ElementRef) {
+    if (elemento) {
+      fromEvent(elemento.nativeElement, 'click').subscribe(() => {
+        alert('Texto clicado!');
+      });
+    }
+  }
+
+  ngOnInit() {
+    this.carregarProdutos();
+  }
+
+  alterarStatus(produto: Produto) {
+    const novoStatus = produto.status === 'ativo' ? 'inativo' : 'ativo';
+    this.produtoService.atualizar(produto.id, { status: novoStatus }).subscribe({
+      next: () => this.carregarProdutos(),
+    });
+  }
+
+  private carregarProdutos() {
+    this.produtoService.listar().subscribe(lista => this.produtos.set(lista));
   }
 }

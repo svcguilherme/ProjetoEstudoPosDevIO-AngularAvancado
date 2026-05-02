@@ -68,7 +68,8 @@
               "buildTarget": "proj-04:build:production"
             },
             "development": {
-              "buildTarget": "proj-04:build:development"
+              "buildTarget": "proj-04:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

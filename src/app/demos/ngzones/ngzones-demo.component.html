@@ -1,0 +1,116 @@
+<div class="demo-page">
+  <header class="demo-hero purple">
+    <a routerLink="/demos" class="back-link">← Demos</a>
+    <h1>⚡ NgZone — Controle de Change Detection</h1>
+    <p>runOutsideAngular, zone.run() e o impacto no ciclo de detecção de mudanças.</p>
+  </header>
+
+  <div class="demo-content">
+
+    <!-- ── Contexto ───────────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>O que é a NgZone?</h2>
+      <p class="desc">
+        A <strong>NgZone</strong> é uma wrapper sobre a library <code>Zone.js</code>.
+        Ela "intercepta" operações assíncronas (setTimeout, events, fetch…) e,
+        ao terminar cada uma, avisa o Angular para verificar mudanças na UI.
+      </p>
+      <div class="aviso-info">
+        📌 Este projeto usa <strong>Zoneless Change Detection</strong>
+        (<code>provideZonelessChangeDetection()</code>). A NgZone ainda está disponível
+        para compatibilidade com libs de terceiros, mas o Angular não depende mais dela
+        para detectar mudanças — usa <strong>Signals</strong> diretamente.
+      </div>
+      <div class="code-block" style="margin-top:16px">
+        <pre>// Zone-based (padrão até Angular 17):
+//   Angular usa Zone.js para saber quando verificar a UI.
+//   Cada setTimeout, click, fetch → Zone notifica → Angular roda CD.
+
+// Zoneless (Angular 18+, este projeto):
+//   Angular usa Signals para saber o que mudou.
+//   Zone.js pode ser removido do bundle (economia &gt; 30KB).
+//   provideZonelessChangeDetection() → sem Zone.js obrigatório.</pre>
+      </div>
+    </section>
+
+    <!-- ── Demo 1: runOutsideAngular ─────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>1. <code>runOutsideAngular()</code> — código sem CD</h2>
+      <p class="desc">
+        Use para tarefas que rodam frequentemente e <strong>não precisam atualizar a UI
+        imediatamente</strong> (animações, polling de sensores, workers).
+        Em apps Zone-based, reduz o número de ciclos de CD.
+        Em Zoneless, o comportamento é o mesmo — Signals notificam quando mudam.
+      </p>
+      <div class="code-block">
+        <pre>constructor() &#123;
+  const zone = inject(NgZone);
+
+  zone.runOutsideAngular(() =&gt; &#123;
+    setInterval(() =&gt; &#123;
+      // não dispara CD em apps Zone-based
+      // Signal ainda reage mesmo aqui em apps Zoneless
+      this.contador.update(v =&gt; v + 1);
+    &#125;, 300);
+  &#125;);
+&#125;</pre>
+      </div>
+      <div class="counter-demo">
+        <div class="counter-value">{{ contadorExterno() }}</div>
+        <p class="counter-label">contador rodando fora da Zone</p>
+        <div class="btn-row">
+          <button class="btn-demo" (click)="iniciarForaZone()" [disabled]="rodandoFora()">
+            {{ rodandoFora() ? '⏳ Rodando...' : '▶ Iniciar' }}
+          </button>
+          <button class="btn-demo ghost" (click)="resetarContador()">↺ Resetar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Demo 2: zone.run() ─────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>2. <code>zone.run()</code> — re-entrar na Zone</h2>
+      <p class="desc">
+        Libs de terceiros (Google Maps, Socket.io, Chart.js) disparam callbacks
+        <strong>fora da Zone</strong>. Sem <code>zone.run()</code>, em apps Zone-based,
+        a UI não atualiza. Envolva a atualização em <code>zone.run()</code> para forçar CD.
+      </p>
+      <div class="code-block">
+        <pre>// Simula callback de lib externa (roda fora da Zone Angular)
+this.zone.runOutsideAngular(() =&gt; &#123;
+  socket.on('mensagem', (dados) =&gt; &#123;
+    // ⚠️ Zone-based: UI NÃO atualiza aqui fora
+    this.zone.run(() =&gt; &#123;
+      // ✅ Força re-entrada na Zone → CD dispara → UI atualiza
+      this.mensagem.set(dados);
+    &#125;);
+  &#125;);
+&#125;);</pre>
+      </div>
+      <div class="callback-demo">
+        @if (mensagemCallback()) {
+          <div class="callback-result">{{ mensagemCallback() }}</div>
+        }
+        <button class="btn-demo" (click)="simularCallbackTerceiros()">
+          Simular callback de lib externa (1s)
+        </button>
+      </div>
+    </section>
+
+    <!-- ── Resumo ─────────────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>📋 Guia de uso</h2>
+      <table class="guide-table">
+        <thead><tr><th>Situação</th><th>O que usar</th></tr></thead>
+        <tbody>
+          <tr><td>Animação de canvas / WebGL rodando a 60fps</td>                    <td><code>runOutsideAngular()</code></td></tr>
+          <tr><td>Polling a cada 100ms (monitoramento)</td>                          <td><code>runOutsideAngular()</code></td></tr>
+          <tr><td>Callback de lib externa que muda estado Angular</td>              <td><code>zone.run()</code></td></tr>
+          <tr><td>Timer que atualiza UI (contador visível)</td>                      <td>Dentro da Zone (padrão)</td></tr>
+          <tr><td>App Zoneless com Signals</td>                                      <td>NgZone opcional; Signals notificam automaticamente</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+</div>

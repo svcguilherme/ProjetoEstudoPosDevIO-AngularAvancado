@@ -1,10 +1,17 @@
-  <header class="topbar">
-    <h1>Projeto Angular</h1>
-    <nav class="menu">
-      <a href="/" routerLink="/" routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
-      <a href="/cadastro-usuario" routerLink="/cadastro-usuario" routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">Cadastro</a>
-      <a href="/sobre" routerLink="/sobre" routerLinkActive="ativo">Sobre</a>
-      <a href="/produtos" routerLink="/produtos" routerLinkActive="ativo">Produtos</a>
-      <a href="/zoneless" routerLink="/zoneless" routerLinkActive="ativo">Zoneless</a>
-    </nav>
-  </header>
+<header class="topbar">
+  <h1>Projeto Estudo Angular 21+</h1>
+  <nav class="menu">
+    <a routerLink="/"     routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">Início</a>
+    <a routerLink="/sobre" routerLinkActive="ativo">Sobre</a>
+
+    @if (auth.isAutenticado()) {
+      <a routerLink="/usuarios"  routerLinkActive="ativo">Usuários</a>
+      <a routerLink="/produtos"  routerLinkActive="ativo">Produtos</a>
+      <a routerLink="/zoneless"         routerLinkActive="ativo">Zoneless</a>
+      <a routerLink="/demos"            routerLinkActive="ativo">Demos</a>
+      <button type="button" class="btn-sair" (click)="sair()">Sair</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="ativo">Login</a>
+    }
+  </nav>
+</header>

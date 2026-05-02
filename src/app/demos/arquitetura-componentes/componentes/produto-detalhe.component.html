@@ -1,0 +1,85 @@
+<div class="det-page">
+
+  <div class="det-header">
+    <a routerLink="/produtos" class="back-btn">← Voltar para Produtos</a>
+    <span class="id-badge">Parâmetro da rota: <strong>id = {{ idDaRota() }}</strong></span>
+  </div>
+
+  <!-- Explicação do conceito -->
+  <div class="conceito-box">
+    <h3>📍 Como funciona: Parâmetros de Rota</h3>
+    <p>
+      Rota configurada como <code>/produtos/:id</code>. O <code>:id</code> é um
+      <strong>parâmetro dinâmico</strong> capturado via <code>ActivatedRoute</code>.
+    </p>
+    <div class="code-compare">
+      <div class="code-col">
+        <span class="col-label good">✅ paramMap (recomendado)</span>
+        <pre>// Reage quando o ID muda
+// sem recriar o componente
+this.route.paramMap.subscribe(params =&gt;
+  const id = params.get('id');
+);</pre>
+      </div>
+      <div class="code-col">
+        <span class="col-label ok">⚠️ snapshot (leitura única)</span>
+        <pre>// Funciona apenas na primeira
+// carga do componente
+const id =
+  this.route.snapshot
+    .paramMap.get('id');</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado: carregando -->
+  @if (carregando()) {
+    <div class="estado-loading">
+      <div class="spinner"></div>
+      <p>Carregando produto #{{ idDaRota() }}...</p>
+    </div>
+  }
+
+  <!-- Estado: erro -->
+  @if (erro()) {
+    <div class="estado-erro">
+      <span>⚠️</span>
+      <p>{{ erro() }}</p>
+      <a routerLink="/produtos" class="back-btn">← Ver todos os produtos</a>
+    </div>
+  }
+
+  <!-- Produto encontrado -->
+  @if (produto(); as p) {
+    <div class="produto-detalhe">
+      <div class="prod-image-wrap">
+        <img [src]="'assets/' + p.image" [alt]="p.nome" class="prod-img"
+             (error)="img.src='assets/sem-imagem.jpeg'" #img>
+      </div>
+      <div class="prod-info">
+        <span class="prod-cat">{{ p.categoria }}</span>
+        @let info = p.status | statusInfo;
+        <span class="badge {{ info.classe }}">{{ info.icone }} {{ info.label }}</span>
+        <h1>{{ p.nome }}</h1>
+        <p class="prod-desc">{{ p.descricao | truncar:120 }}</p>
+        <div class="prod-preco">{{ p.preco | currency:'BRL':'symbol':'1.2-2' }}</div>
+
+        <div class="nav-produtos">
+          <span class="nav-label">Navegar:</span>
+          @for (id of [1,2,3,4,5]; track id) {
+            <a class="nav-id" [routerLink]="['/produtos', id]"
+               [class.active]="id === p.id">{{ id }}</a>
+          }
+          <span class="nav-hint">← Clique para trocar o ID e ver o paramMap reagir!</span>
+        </div>
+      </div>
+    </div>
+  } @else if (!carregando() && !erro()) {
+    <div class="nao-encontrado">
+      <span>🔍</span>
+      <h2>Produto #{{ idDaRota() }} não encontrado</h2>
+      <a routerLink="/produtos" class="back-btn">← Ver todos os produtos</a>
+    </div>
+  }
+
+</div>

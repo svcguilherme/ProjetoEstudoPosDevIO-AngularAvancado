@@ -1,0 +1,64 @@
+<div class="nf-wrapper">
+  <div class="nf-card">
+    <span class="nf-code">404</span>
+    <h1 class="nf-title">Página não encontrada</h1>
+    <p class="nf-desc">
+      A rota que você tentou acessar não existe.<br>
+      Verifique o endereço ou volte para o início.
+    </p>
+    <div class="nf-actions">
+      <a routerLink="/" class="btn-primary">Ir para o início</a>
+      <a routerLink="/login" class="btn-secondary">Fazer login</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .nf-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+    font-family: sans-serif;
+  }
+  .nf-card {
+    text-align: center;
+    color: #fff;
+    padding: 3rem 2rem;
+  }
+  .nf-code {
+    display: block;
+    font-size: 8rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -4px;
+    background: linear-gradient(135deg, #90caf9, #e3f2fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .nf-title {
+    font-size: 1.8rem;
+    margin: 1rem 0 .5rem;
+    font-weight: 600;
+  }
+  .nf-desc {
+    font-size: 1rem;
+    opacity: .75;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  .nf-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary, .btn-secondary {
+    padding: .7rem 1.8rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity .2s;
+  }
+  .btn-primary:hover, .btn-secondary:hover { opacity: .85; }
+  .btn-primary  { background: #1976d2; color: #fff; }
+  .btn-secondary { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.4); }
+</style>

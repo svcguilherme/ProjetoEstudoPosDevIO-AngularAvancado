@@ -1,0 +1,45 @@
+.demo-page { background: #f8fafc; min-height: 100vh; font-family: system-ui, sans-serif; }
+
+.demo-hero { color: #fff; padding: 40px 32px 36px; }
+.demo-hero.purple { background: linear-gradient(135deg, #4c1d95, #7c3aed); }
+.demo-hero.green  { background: linear-gradient(135deg, #14532d, #16a34a); }
+.demo-hero.blue   { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
+.demo-hero.orange { background: linear-gradient(135deg, #7c2d12, #ea580c); }
+.demo-hero.teal   { background: linear-gradient(135deg, #134e4a, #0d9488); }
+.demo-hero.rose   { background: linear-gradient(135deg, #881337, #e11d48); }
+
+.back-link { color: rgba(255,255,255,.8); text-decoration: none; font-size: .875rem; font-weight: 600; display: inline-block; margin-bottom: 16px; }
+.back-link:hover { color: #fff; }
+.demo-hero h1 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin: 0 0 8px; }
+.demo-hero p  { color: rgba(255,255,255,.8); margin: 0; font-size: .95rem; }
+
+.demo-content { max-width: 860px; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 24px; }
+
+.demo-card { background: #fff; border-radius: 12px; padding: 28px; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+.demo-card h2 { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0 0 8px; }
+.demo-card h2 code { color: #7c3aed; background: #f3e8ff; padding: 1px 6px; border-radius: 4px; font-size: .9em; }
+
+.desc { color: #475569; font-size: .9rem; line-height: 1.7; margin: 0 0 16px; }
+.desc code { background: #f1f5f9; color: #6366f1; padding: 1px 5px; border-radius: 4px; }
+
+.code-block { background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 16px; overflow-x: auto; }
+.code-block pre { color: #e2e8f0; font-size: .8rem; margin: 0; white-space: pre-wrap; font-family: 'Fira Code', monospace; }
+
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-demo { padding: 8px 18px; border: none; border-radius: 8px; font-size: .875rem; font-weight: 600; cursor: pointer; transition: opacity .2s, transform .15s; background: #7c3aed; color: #fff; }
+.btn-demo:hover { opacity: .88; transform: translateY(-1px); }
+.btn-demo.ghost { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+
+.demo-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+.demo-input { border: 2px solid #e2e8f0; border-radius: 8px; padding: 8px 14px; font-size: .95rem; outline: none; transition: border-color .2s; flex: 1; min-width: 180px; }
+.demo-input:focus { border-color: #7c3aed; }
+
+.aviso { background: #fef9c3; border-left: 3px solid #ca8a04; padding: 10px 14px; border-radius: 6px; font-size: .8rem; color: #78350f; margin-top: 10px; }
+.aviso code { background: rgba(0,0,0,.07); padding: 1px 5px; border-radius: 4px; }
+
+.paineis-lista { display: flex; flex-direction: column; gap: 8px; }
+
+.log-box { background: #0f172a; border-radius: 10px; overflow: hidden; font-family: 'Fira Code', monospace; }
+.log-entry { padding: 7px 16px; color: #4ade80; font-size: .82rem; border-bottom: 1px solid #1e293b; animation: fadeIn .3s ease; }
+.log-empty { padding: 20px 16px; color: #475569; font-size: .85rem; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }

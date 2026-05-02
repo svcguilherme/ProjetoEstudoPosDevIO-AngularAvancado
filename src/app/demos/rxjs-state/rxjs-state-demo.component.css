@@ -1,0 +1,56 @@
+.demo-page { background: #f8fafc; min-height: 100vh; font-family: system-ui, sans-serif; }
+.demo-hero { color: #fff; padding: 40px 32px 36px; }
+.demo-hero.teal { background: linear-gradient(135deg, #134e4a, #0d9488); }
+.back-link { color: rgba(255,255,255,.8); text-decoration: none; font-size: .875rem; font-weight: 600; display: inline-block; margin-bottom: 16px; }
+.back-link:hover { color: #fff; }
+.demo-hero h1 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; margin: 0 0 8px; }
+.demo-hero p  { color: rgba(255,255,255,.8); margin: 0; }
+
+.demo-content { max-width: 960px; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 24px; }
+.demo-card { background: #fff; border-radius: 12px; padding: 24px 28px; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+.demo-card h2 { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0 0 8px; display: flex; align-items: center; gap: 10px; }
+.count-badge { background: #0d9488; color: #fff; font-size: .75rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+
+.desc { color: #475569; font-size: .9rem; line-height: 1.7; margin: 0 0 16px; }
+.code-block { background: #1e293b; border-radius: 8px; padding: 16px; overflow-x: auto; }
+.code-block pre { color: #e2e8f0; font-size: .78rem; margin: 0; white-space: pre-wrap; font-family: 'Fira Code', monospace; }
+
+.shop-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 640px) { .shop-layout { grid-template-columns: 1fr; } }
+
+.prod-list { display: flex; flex-direction: column; gap: 10px; }
+.prod-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+.prod-info { display: flex; flex-direction: column; gap: 2px; }
+.prod-nome  { font-size: .9rem; font-weight: 600; color: #1e293b; }
+.prod-preco { font-size: .8rem; color: #16a34a; font-weight: 700; }
+.btn-add { background: #0d9488; color: #fff; border: none; border-radius: 6px; padding: 6px 12px; font-size: .8rem; font-weight: 700; cursor: pointer; transition: opacity .2s; white-space: nowrap; }
+.btn-add:hover { opacity: .85; }
+
+.carrinho-vazio { text-align: center; padding: 32px; color: #94a3b8; }
+.carrinho-vazio span { font-size: 2rem; display: block; margin-bottom: 8px; }
+.carrinho-vazio p { margin: 0; font-size: .9rem; }
+
+.itens-lista { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.cart-item { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+.cart-nome  { font-size: .85rem; color: #374151; font-weight: 500; }
+.cart-qty   { display: flex; align-items: center; gap: 6px; }
+.cart-qty button { width: 26px; height: 26px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 4px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+.cart-qty span { font-weight: 700; font-size: .9rem; min-width: 20px; text-align: center; }
+.cart-subtotal { font-size: .85rem; font-weight: 700; color: #16a34a; white-space: nowrap; }
+.btn-remove { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: .9rem; padding: 4px; transition: color .2s; }
+.btn-remove:hover { color: #dc2626; }
+
+.carrinho-footer { border-top: 2px solid #e2e8f0; padding-top: 14px; }
+.total-line { display: flex; justify-content: space-between; align-items: center; font-size: 1rem; margin-bottom: 12px; color: #1e293b; }
+.total-line strong { font-size: 1.2rem; color: #16a34a; }
+.btn-limpar { width: 100%; padding: 10px; background: #fee2e2; color: #dc2626; border: none; border-radius: 8px; font-size: .875rem; font-weight: 700; cursor: pointer; transition: background .2s; }
+.btn-limpar:hover { background: #fecaca; }
+
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+.compare-col { border-radius: 10px; padding: 16px 20px; }
+.compare-col.rxjs    { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.compare-col.signals { background: #ede9fe; border: 1px solid #c4b5fd; }
+.compare-col h3 { font-size: .95rem; font-weight: 700; color: #1e293b; margin: 0 0 10px; }
+.compare-col ul { margin: 0; padding-left: 18px; color: #475569; font-size: .85rem; line-height: 1.8; }
+.compare-col code { background: rgba(0,0,0,.07); padding: 1px 4px; border-radius: 3px; font-size: .8em; }

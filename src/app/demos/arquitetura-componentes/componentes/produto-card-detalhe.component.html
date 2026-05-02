@@ -16,8 +16,9 @@
 
                 @if(produto.status==='inativo'){
                     <div>
-                        <h4 class="card-text">Este produto está atualmente inativo. Você pode reativá-lo para que ele volte a aparecer em sua loja.</h4>
+                        <h4 class="card-text">Este produto está atualmente inativo.</h4>
                     </div>
+                    <ng-content></ng-content>
                 }
 
                 @if(produto.status==='ativo'){
@@ -26,12 +27,14 @@
                     </div>
                 }
 
-                <div class="card-footer">   
-                    @if(produto.status==='ativo'){
-                        <a class="btn btn-danger" (click)="emitirEvento(produto)" >Desativar</a>
-                    }
-                    @if(produto.status==='inativo'){
-                        <a class="btn btn-success" (click)="emitirEvento(produto)" >Ativar</a>
-                    }
-                </div>
+                @if (isAdmin()) {
+                    <div class="card-footer">
+                        @if(produto.status==='ativo'){
+                            <a class="btn btn-danger" (click)="emitirEvento(produto)">Desativar</a>
+                        }
+                        @if(produto.status==='inativo'){
+                            <a class="btn btn-success" (click)="emitirEvento(produto)">Ativar</a>
+                        }
+                    </div>
+                }
     </div>

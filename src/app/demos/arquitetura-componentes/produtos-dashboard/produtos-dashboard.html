@@ -1,17 +1,21 @@
 <div class="container main-container">
     <div class="row">
         <div class="col-md-4">
-            <h3>Store</h3>
-            <p>Bem-vindo ao dashboard de produtos! Aqui você pode visualizar e gerenciar seus produtos de forma eficiente.</p>
+            <h3 #teste>Lista de Produtos</h3>
+            <p>Bem-vindo ao dashboard de produtos! Aqui você pode visualizar e
+              gerenciar seus produtos de forma eficiente.</p>
         </div>
       </div>
     <div>
-        <produto-count [produtos]="produtos"></produto-count>
+        <produto-count [produtos]="produtos()"></produto-count>
     </div>
     <div class="row">
-      @for (produto of produtos; track produto.id) {
+      @for (produto of produtos(); track produto.id) {
         <div class="col-md-4">
-          <produto-card-detalhe [produto]="produto"></produto-card-detalhe>
+          <produto-card-detalhe [produto]="produto" (statusChange)="alterarStatus($event)">
+            <h5 class="alert alert-info">Ou vá até uma de nossas lojas</h5>
+          </produto-card-detalhe>
+
         </div>
       }
     </div>    

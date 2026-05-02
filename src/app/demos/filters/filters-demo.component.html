@@ -1,0 +1,122 @@
+<div class="demo-page">
+  <header class="demo-hero blue">
+    <a routerLink="/demos" class="back-link">← Demos</a>
+    <h1>🔍 Filtros Reativos com Signals</h1>
+    <p>computed() para filtrar listas — sem impure pipes, sem performance issues.</p>
+  </header>
+
+  <div class="demo-content">
+
+    <!-- ── Por que não impure pipe ────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>⚠️ Por que não usar Impure Pipe para filtros?</h2>
+      <div class="code-block">
+        <pre>// ❌ Impure pipe (pure: false) — EVITE para filtros:
+//    recalcula a CADA ciclo de change detection (centenas de vezes/segundo)
+//    Em listas grandes → lag visível.
+
+@Pipe(&#123; name: 'filtrar', pure: false &#125;)  // ← puro: false
+export class FiltrarPipe &#123;
+  transform(lista: Produto[], filtro: string) &#123;
+    return lista.filter(...);  // chamado em TODA checagem de CD
+  &#125;
+&#125;
+
+// ✅ Correto: computed() recalcula APENAS quando o signal de filtro muda
+produtosFiltrados = computed(() =&gt;
+  PRODUTOS.filter(p =&gt; p.nome.toLowerCase().includes(this.termoBusca()))
+);</pre>
+      </div>
+    </section>
+
+    <!-- ── Painel de filtros ──────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <div class="filtros-header">
+        <h2>🗂️ Filtros</h2>
+        <span class="total-badge">{{ totalEncontrados() }} produto(s) encontrado(s)</span>
+      </div>
+      <div class="filtros-grid">
+        <!-- Busca por texto -->
+        <div class="filtro-group">
+          <label>Busca</label>
+          <input
+            type="text"
+            placeholder="Nome ou descrição..."
+            [value]="termoBusca()"
+            (input)="termoBusca.set($any($event.target).value)"
+          />
+        </div>
+        <!-- Categoria -->
+        <div class="filtro-group">
+          <label>Categoria</label>
+          <select [value]="categoriaFiltro()" (change)="categoriaFiltro.set($any($event.target).value)">
+            @for (cat of categorias; track cat) {
+              <option [value]="cat">{{ cat }}</option>
+            }
+          </select>
+        </div>
+        <!-- Status -->
+        <div class="filtro-group">
+          <label>Status</label>
+          <select [value]="statusFiltro()" (change)="statusFiltro.set($any($event.target).value)">
+            <option value="todos">Todos</option>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+          </select>
+        </div>
+        <div class="filtro-group btn-col">
+          <button class="btn-limpar" (click)="limparFiltros()">Limpar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Lista filtrada ─────────────────────────────────────────────────── -->
+    @if (produtosFiltrados().length === 0) {
+      <div class="empty-state">
+        <span>🔍</span>
+        <p>Nenhum produto encontrado com os filtros aplicados.</p>
+        <button class="btn-limpar" (click)="limparFiltros()">Limpar filtros</button>
+      </div>
+    } @else {
+      <div class="produtos-grid">
+        @for (p of produtosFiltrados(); track p.id) {
+          @let info = p.status | statusInfo;
+          <div class="produto-card">
+            <div class="produto-header">
+              <span class="produto-nome">{{ p.nome }}</span>
+              <span class="badge {{ info.classe }}">{{ info.icone }} {{ info.label }}</span>
+            </div>
+            <p class="produto-desc">{{ p.descricao | truncar:60 }}</p>
+            <div class="produto-footer">
+              <span class="produto-cat">{{ p.categoria }}</span>
+              <strong class="produto-preco">{{ p.preco | currency:'BRL':'symbol':'1.2-2' }}</strong>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ── Como funciona ────────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>Como funciona</h2>
+      <div class="code-block">
+        <pre>// Signals independentes para cada filtro
+termoBusca      = signal('');
+categoriaFiltro = signal('Todas');
+statusFiltro    = signal('todos');
+
+// computed lê os 3 signals automaticamente
+// Angular rastreia as dependências e recalcula quando QUALQUER uma muda
+produtosFiltrados = computed(() =&gt; &#123;
+  const termo     = this.termoBusca().toLowerCase();
+  const categoria = this.categoriaFiltro();
+  const status    = this.statusFiltro();
+
+  return PRODUTOS.filter(p =&gt;
+    p.nome.toLowerCase().includes(termo) &amp;&amp;
+    (categoria === 'Todas' || p.categoria === categoria) &amp;&amp;
+    (status === 'todos' || p.status === status)
+  );
+&#125;);
+
+// No template: chamada simples como função

@@ -1,0 +1,130 @@
+<div class="demo-page">
+  <header class="demo-hero green">
+    <a routerLink="/demos" class="back-link">← Demos</a>
+    <h1>🔧 Pipes — Nativos + Customizados</h1>
+    <p>Transformação de dados nos templates. Pure vs impure. Criação de pipes próprios.</p>
+  </header>
+
+  <div class="demo-content">
+
+    <!-- ── O que é um Pipe ────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>O que é um Pipe?</h2>
+      <p class="desc">
+        Um pipe transforma dados <strong>no template</strong> sem alterar o dado original.
+        Sintaxe: <code>valor | nomePipe:arg1:arg2</code>. Pipes podem ser encadeados:
+        <code>nome | uppercase | slice:0:5</code>.
+      </p>
+      <div class="code-block">
+        <pre>// Pure pipe (padrão): Angular só recalcula quando o INPUT muda (por referência)
+// ✅ Performance ótima — use sempre que possível.
+
+// Impure pipe (pure: false): recalcula a cada ciclo de change detection
+// ⚠️ Cuidado! Pode impactar performance. Use somente quando necessário
+//    (ex: pipe que reage a mutações internas de um array sem nova referência).
+
+@Pipe(&#123; name: 'meuPipe', standalone: true, pure: true &#125;)
+export class MeuPipe implements PipeTransform &#123;
+  transform(valor: string, argumento = 'default'): string &#123;
+    return // ... lógica de transformação
+  &#125;
+&#125;</pre>
+      </div>
+    </section>
+
+    <!-- ── Pipes Nativos ─────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>Pipes Nativos do Angular</h2>
+      <table class="pipe-table">
+        <thead><tr><th>Pipe</th><th>Entrada</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td><code>date:'short'</code></td>         <td>{{ dataAtual }}</td>                       <td><strong>{{ dataAtual | date:'short' }}</strong></td></tr>
+          <tr><td><code>date:'dd/MM/yyyy'</code></td>    <td>{{ dataAtual }}</td>                       <td><strong>{{ dataAtual | date:'dd/MM/yyyy' }}</strong></td></tr>
+          <tr><td><code>date:'fullDate':'':'pt'</code></td><td>{{ dataAtual }}</td>                     <td><strong>{{ dataAtual | date:'fullDate':'':'pt' }}</strong></td></tr>
+          <tr><td><code>currency:'BRL'</code></td>       <td>{{ produto.preco }}</td>                   <td><strong>{{ produto.preco | currency:'BRL':'symbol':'1.2-2' }}</strong></td></tr>
+          <tr><td><code>number:'1.2-2'</code></td>       <td>{{ numero }}</td>                          <td><strong>{{ numero | number:'1.2-2' }}</strong></td></tr>
+          <tr><td><code>percent:'1.1-2'</code></td>      <td>{{ percentual }}</td>                      <td><strong>{{ percentual | percent:'1.1-2' }}</strong></td></tr>
+          <tr><td><code>uppercase</code></td>            <td>{{ produto.nome }}</td>                    <td><strong>{{ produto.nome | uppercase }}</strong></td></tr>
+          <tr><td><code>lowercase</code></td>            <td>{{ produto.nome }}</td>                    <td><strong>{{ produto.nome | lowercase }}</strong></td></tr>
+          <tr><td><code>titlecase</code></td>            <td>{{ texto }}</td>                           <td><strong>{{ texto | titlecase }}</strong></td></tr>
+          <tr><td><code>slice:0:3</code></td>            <td>{{ lista }}</td>                           <td><strong>{{ lista | slice:0:3 }}</strong></td></tr>
+          <tr><td><code>json</code></td>                 <td>Objeto JS</td>                             <td><strong>{{ obj | json }}</strong></td></tr>
+          <tr><td><code>keyvalue</code></td>             <td>Objeto JS</td>                             <td><strong>@for (kv of obj | keyvalue; track kv.key) {<span>{{kv.key}}: {{kv.value}} </span>}</strong></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── Pipe Custom: TruncarPipe ──────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>Pipe Customizado: <code>truncar</code></h2>
+      <p class="desc">
+        Trunca texto longo com reticências. Aceita argumentos para limite e sufixo.
+      </p>
+      <div class="code-block">
+        <pre>&#64;Pipe(&#123; name: 'truncar', standalone: true &#125;)
+export class TruncarPipe implements PipeTransform &#123;
+  transform(valor: string | null | undefined, limite = 50, sufixo = '...'): string &#123;
+    if (!valor) return '';
+    if (valor.length &lt;= limite) return valor;
+    return valor.substring(0, limite).trimEnd() + sufixo;
+  &#125;
+&#125;</pre>
+      </div>
+      <table class="pipe-table">
+        <thead><tr><th>Expressão</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td><code>produto.descricao | truncar</code></td>        <td>{{ produto.descricao | truncar }}</td></tr>
+          <tr><td><code>produto.descricao | truncar:40</code></td>     <td>{{ produto.descricao | truncar:40 }}</td></tr>
+          <tr><td><code>produto.descricao | truncar:20:'…'</code></td><td>{{ produto.descricao | truncar:20:'…' }}</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── Pipe Custom: StatusPipe ───────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>Pipe Customizado: <code>statusInfo</code></h2>
+      <p class="desc">
+        Retorna um <strong>objeto</strong> com label, classe CSS e ícone. Use com
+        <code>&#64;let</code> para evitar chamar o pipe múltiplas vezes.
+      </p>
+      <div class="code-block">
+        
+      </div>
+      <div class="status-demo">
+        @for (s of statusExemplos; track s) {
+          @let info = s | statusInfo;
+          <div class="status-item">
+            <code class="status-input">"{{ s }}"</code>
+            <span>→</span>
+            <span class="badge {{ info.classe }}">{{ info.icone }} {{ info.label }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ── Pipe: async ───────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>Pipe Nativo: <code>async</code></h2>
+      <p class="desc">
+        O pipe <code>async</code> assina um <code>Observable</code> ou <code>Promise</code>
+        e exibe o valor emitido. <strong>Cancela automaticamente</strong> a assinatura
+        quando o componente é destruído — zero memory leak.
+      </p>
+      <div class="code-block">
+        <pre>// No componente:
+produtos$ = this.produtoService.listar();  // Observable&lt;Produto[]&gt;
+
+// No template:
+&#64;let produtos = produtos$ | async;
+&#64;if (produtos) &#123;
+  &#64;for (p of produtos; track p.id) &#123; ... &#125;
+&#125;</pre>
+      </div>
+      <div class="aviso-info">
+        💡 Em modo <strong>Zoneless</strong>, prefira <code>toSignal(obs$)</code>
+        para converter Observables em Signals e eliminar a necessidade do <code>async</code> pipe.
+      </div>
+    </section>
+
+  </div>
+</div>

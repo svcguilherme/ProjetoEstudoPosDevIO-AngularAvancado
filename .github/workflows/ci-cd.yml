@@ -1,0 +1,77 @@
+name: CI / CD
+
+# Dispara em push e PRs para as branches principais
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+
+  # ── Job 1: Build ─────────────────────────────────────────────────────────────
+  # Roda em todo push/PR — valida que o projeto compila sem erros.
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build de produção
+        run: npm run build
+
+      # Opcional — descomente se o projeto tiver testes configurados
+      # - name: Rodar testes unitários
+      #   run: npm test -- --watch=false --browsers=ChromeHeadless
+
+  # ── Job 2: Docker Build & Push ───────────────────────────────────────────────
+  # Só roda em push direto na branch principal (não em PRs).
+  # Requer os secrets DOCKERHUB_USERNAME e DOCKERHUB_TOKEN no repositório.
+  #
+  # Como configurar:
+  #   1. Crie um token em hub.docker.com → Account Settings → Security
+  #   2. No GitHub: Settings → Secrets → Actions → New repository secret
+  #      DOCKERHUB_USERNAME = seu-usuario-dockerhub
+  #      DOCKERHUB_TOKEN    = seu-token
+  docker:
+    name: Docker Build & Push
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build e push da imagem
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          # Gera duas tags: latest e o SHA do commit (para rollback)
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/proj-04-angular:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/proj-04-angular:${{ github.sha }}
+          # Cache entre runs para acelerar builds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

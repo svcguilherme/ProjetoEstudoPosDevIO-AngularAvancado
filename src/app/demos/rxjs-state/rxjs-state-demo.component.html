@@ -1,0 +1,132 @@
+<div class="demo-page">
+  <header class="demo-hero teal">
+    <a routerLink="/demos" class="back-link">← Demos</a>
+    <h1>🔄 Gerenciamento de Estado com RxJS</h1>
+    <p>BehaviorSubject store, combineLatest e async pipe em um carrinho de compras.</p>
+  </header>
+
+  <div class="demo-content">
+
+    <!-- ── Conceito ──────────────────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>Padrão: BehaviorSubject Store</h2>
+      <p class="desc">
+        O <code>BehaviorSubject</code> age como uma "fonte única da verdade" para um slice
+        de estado. Estados derivados são <strong>observables</strong> criados com operadores
+        RxJS (<code>map</code>, <code>combineLatest</code>, <code>filter</code>…) e
+        consumidos no template com o pipe <code>async</code>.
+      </p>
+      <div class="code-block">
+        <pre>// store.ts
+private _itens = new BehaviorSubject&lt;ItemCarrinho[]&gt;([]);
+
+readonly itens$ = this._itens.asObservable();           // readonly
+readonly total$ = this.itens$.pipe(
+  map(itens =&gt; itens.reduce((acc, i) =&gt; acc + i.preco, 0))
+);
+readonly resumo$ = combineLatest([this.itens$, this.total$]).pipe(
+  map(([itens, total]) =&gt; (&#123; itens, total &#125;))           // combina estados
+);
+
+adicionar(p: Produto) &#123;
+  // IMUTABILIDADE: sempre crie novos arrays/objetos
+  this._itens.next([...this._itens.getValue(), &#123; produto: p, quantidade: 1 &#125;]);
+&#125;
+
+// template:
+&#64;let resumo = resumo$ | async;  // async pipe: assina e cancela automaticamente</pre>
+      </div>
+    </section>
+
+    <!-- ── Demo: Carrinho ─────────────────────────────────────────────────── -->
+    @let vm = resumo$ | async;
+
+    <div class="shop-layout">
+
+      <!-- Catálogo -->
+      <section class="demo-card catalogo">
+        <h2>🛍️ Catálogo</h2>
+        <div class="prod-list">
+          @for (p of catalogo; track p.id) {
+            <div class="prod-item">
+              <div class="prod-info">
+                <span class="prod-nome">{{ p.nome }}</span>
+                <span class="prod-preco">{{ p.preco | currency:'BRL':'symbol':'1.2-2' }}</span>
+              </div>
+              <button class="btn-add" (click)="adicionar(p)">+ Adicionar</button>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Carrinho -->
+      <section class="demo-card carrinho">
+        <h2>🛒 Carrinho
+          @if (vm && vm.count > 0) {
+            <span class="count-badge">{{ vm.count }}</span>
+          }
+        </h2>
+
+        @if (estaVazio$ | async) {
+          <div class="carrinho-vazio">
+            <span>🛒</span>
+            <p>Carrinho vazio. Adicione produtos!</p>
+          </div>
+        } @else {
+          @if (vm) {
+            <div class="itens-lista">
+              @for (item of vm.itens; track item.produto.id) {
+                <div class="cart-item">
+                  <span class="cart-nome">{{ item.produto.nome }}</span>
+                  <div class="cart-qty">
+                    <button (click)="decrementar(item.produto.id)">−</button>
+                    <span>{{ item.quantidade }}</span>
+                    <button (click)="adicionar(item.produto)">+</button>
+                  </div>
+                  <span class="cart-subtotal">
+                    {{ (item.produto.preco * item.quantidade) | currency:'BRL':'symbol':'1.2-2' }}
+                  </span>
+                  <button class="btn-remove" (click)="remover(item.produto.id)">✕</button>
+                </div>
+              }
+            </div>
+
+            <div class="carrinho-footer">
+              <div class="total-line">
+                <span>Total</span>
+                <strong>{{ vm.total | currency:'BRL':'symbol':'1.2-2' }}</strong>
+              </div>
+              <button class="btn-limpar" (click)="limparCarrinho()">Limpar carrinho</button>
+            </div>
+          }
+        }
+      </section>
+    </div>
+
+    <!-- ── Por que RxJS vs Signals ────────────────────────────────────────── -->
+    <section class="demo-card">
+      <h2>RxJS vs Signals — quando usar cada um?</h2>
+      <div class="compare-grid">
+        <div class="compare-col rxjs">
+          <h3>🔄 RxJS (BehaviorSubject)</h3>
+          <ul>
+            <li>Operações assíncronas complexas (HTTP, WebSocket)</li>
+            <li>Combinação de múltiplas fontes (<code>combineLatest</code>, <code>zip</code>)</li>
+            <li>Transformações com pipeline (<code>switchMap</code>, <code>debounceTime</code>)</li>
+            <li>Estado com tempo / delay / throttle</li>
+          </ul>
+        </div>
+        <div class="compare-col signals">
+          <h3>⚡ Signals</h3>
+          <ul>
+            <li>Estado de UI local (contador, toggle, form)</li>
+            <li>Valores derivados simples (<code>computed</code>)</li>
+            <li>Integração com Zoneless change detection</li>
+            <li>Mais simples e menos verboso para casos básicos</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
