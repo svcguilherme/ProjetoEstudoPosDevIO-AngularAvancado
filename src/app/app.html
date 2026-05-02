@@ -1,14 +1,7 @@
-<div class="layout">
-  <header class="topbar">
-    <h1>Projeto Angular</h1>
-    <nav class="menu">
-      <a routerLink="/" routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
-      <a routerLink="/cadastro-usuario" routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">Cadastro</a>
-      <a routerLink="/sobre" routerLinkActive="ativo">Sobre</a>
-    </nav>
-  </header>
-
-  <main class="conteudo">
+<app-menu></app-menu>
+<div class="layout">    
+  <main class="conteudo">   
     <router-outlet></router-outlet>
   </main>
+  <app-footer></app-footer>
 </div>

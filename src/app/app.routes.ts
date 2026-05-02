@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
-import { HomePageComponent } from './pages/home-page.component';
 import { SobrePageComponent } from './pages/sobre-page.component';
 import { CadastroUsuarioComponent } from './cadastro-usuario/cadastro-usuario.component';
+import { HomeComponent } from './navegacao/home.component/home.component';
 
 export const routes: Routes = [
 	{
 		path: '',
-		component: HomePageComponent
+		component: HomeComponent
 	},
 	{
 		path: 'cadastro-usuario',
@@ -15,6 +15,10 @@ export const routes: Routes = [
 	{
 		path: 'sobre',
 		component: SobrePageComponent
+	},
+	{
+		path: 'produtos',
+		loadChildren: () => import('./demos/arquitetura-componentes/produtos-dashboard/produto.route').then(m => m.ProdutoRoutingModule)
 	},
 	{
 		path: '**',

@@ -1,0 +1,37 @@
+    <div class="card h-100">
+                <div style="align-content: center;">
+                    <p>{{produto.image}}</p>
+                    <img [src]="'assets/' + produto.image" [alt]="produto.nome + ' imagem'" class="card-img-top" style="width: 200px; height: 200px; object-fit: cover;" (error)="img.src='assets/sem-imagem.jpeg'" #img>
+                    <h4 class="card-title">{{produto.nome}}</h4>
+                    <div></div>
+                </div>
+                @switch (produto.status) {  
+                    @case ('ativo') {
+                        <span class="badge bg-success">Ativo</span>
+                    }
+                    @case ('inativo') {
+                        <span class="badge bg-secondary">Inativo</span>
+                    }
+                }
+
+                @if(produto.status==='inativo'){
+                    <div>
+                        <h4 class="card-text">Este produto está atualmente inativo. Você pode reativá-lo para que ele volte a aparecer em sua loja.</h4>
+                    </div>
+                }
+
+                @if(produto.status==='ativo'){
+                    <div>
+                        <h4>{{produto.preco | currency:'BRL':'symbol':'1.2-2'}}</h4>
+                    </div>
+                }
+
+                <div class="card-footer">   
+                    @if(produto.status==='ativo'){
+                        <a class="btn btn-danger" (click)="emitirEvento(produto)" >Desativar</a>
+                    }
+                    @if(produto.status==='inativo'){
+                        <a class="btn btn-success" (click)="emitirEvento(produto)" >Ativar</a>
+                    }
+                </div>
+    </div>

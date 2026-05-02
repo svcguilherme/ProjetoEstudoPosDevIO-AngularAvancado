@@ -3,7 +3,6 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators }
 import { ReactiveFormsModule } from '@angular/forms';
 import { Usuario } from '../../model/Usuario';
 import { CPFValidator } from '../shared/validators/cpf.validator';
-import { UniversalValidators } from 'ngx-validators';
 
 @Component({
   selector: 'app-cadastro-usuario',
@@ -20,15 +19,33 @@ export class CadastroUsuarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.cadastroForm = this.fb.group({
-      nome: ['', Validators.required],
+      nome: ['', [Validators.required, this.validacaoNome.bind(this)]],
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required, UniversalValidators.minLength(6), UniversalValidators.maxLength(20)]],
-      senhaConfirmacao: ['', [Validators.required, UniversalValidators.minLength(6), UniversalValidators.maxLength(20)]],
-      cpf: ['', [Validators.required, UniversalValidators.noWhitespace, CPFValidator.validar]],
+      senha: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
+      senhaConfirmacao: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
+      cpf: ['', [Validators.required, Validators.pattern(/^\S+$/), CPFValidator.validar]],
       dataNascimento: ['', this.validaDataNascimento]
     }, {
       validators: this.senhasIguaisValidator
     });
+  }
+
+
+  private validacaoNome(control: AbstractControl): ValidationErrors | null {
+    const valor = String(control.value ?? '').trim();
+
+    if (this.cadastroForm?.touched) {
+      if (!valor) {
+        return { nomeNaoPreenchido: true };
+      }
+
+      if (valor.length < 3) {
+        return { nomeCurto: true };
+      }
+
+      return valor.length >= 3 ? null : { nomeCurto: true };
+    }
+    return null;
   }
 
   private senhasIguaisValidator(control: AbstractControl): ValidationErrors | null {
@@ -58,7 +75,6 @@ export class CadastroUsuarioComponent implements OnInit {
     }
   
     if (data > hoje) {
-      erroDataFutura: true;
       return { dataFutura: true };
     }
     return null;
