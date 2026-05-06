@@ -5,6 +5,9 @@
             <p>Bem-vindo ao dashboard de produtos! Aqui você pode visualizar e
               gerenciar seus produtos de forma eficiente.</p>
         </div>
+        <p>Busca</p>
+        <div class="col-md-4">
+            <input type="text" class="form-control" placeholder="Buscar por nome..." (input)="buscarporNome($any($event.target).value)">
       </div>
     <div>
         <produto-count [produtos]="produtos()"></produto-count>

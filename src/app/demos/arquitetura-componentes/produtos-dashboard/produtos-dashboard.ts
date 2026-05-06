@@ -17,6 +17,7 @@ export class ProdutosDashboardComponent implements OnInit {
   private readonly produtoService = inject(ProdutoApiService);
 
   readonly produtos = signal<Produto[]>([]);
+  private todosProdutos: Produto[] = [];
 
   @ViewChild('teste') set content(elemento: ElementRef) {
     if (elemento) {
@@ -36,8 +37,18 @@ export class ProdutosDashboardComponent implements OnInit {
       next: () => this.carregarProdutos(),
     });
   }
+  
+  buscarporNome(nome: string) {
+    const filtrado = nome
+      ? this.todosProdutos.filter(p => p.nome.toLowerCase().includes(nome.toLowerCase()))
+      : this.todosProdutos;
+    this.produtos.set(filtrado);
+  }
 
   private carregarProdutos() {
-    this.produtoService.listar().subscribe(lista => this.produtos.set(lista));
+    this.produtoService.listar().subscribe(lista => {
+      this.todosProdutos = lista;
+      this.produtos.set(lista);
+    });
   }
 }
