@@ -47,6 +47,13 @@ export const routes: Routes = [
       import('./demos/arquitetura-componentes/produtos-dashboard/produto.route')
         .then(m => m.ProdutoRoutingModule),
   },
+   {
+    path: 'categoria-produtos',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./categoria-produtos/categoria-produtos.routes')
+        .then(m => m.CATEGORIA_PRODUTOS_ROUTES),
+  },
   {
     path: 'zoneless',
     canActivate: [authGuard],

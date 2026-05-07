@@ -1,6 +1,6 @@
 # ─── Stage 1: Build ──────────────────────────────────────────────────────────
 # Instala dependências e compila o projeto Angular (SSR + browser).
-FROM node:20-alpine AS build
+FROM node:22.15-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
@@ -13,7 +13,7 @@ RUN npm run build
 # Imagem mínima com apenas o artefato compilado.
 # O bundle gerado pelo @angular/build:application é autocontido (esbuild/Vite
 # inline todas as dependências do servidor), então não precisamos de node_modules.
-FROM node:20-alpine AS production
+FROM node:22.15-alpine AS production
 WORKDIR /app
 
 COPY --from=build /app/dist/proj-04 .
